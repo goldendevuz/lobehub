@@ -11,27 +11,16 @@ const SHOW_DELAY = 600;
 // This runs in the synchronous shell boot chain, before Core creates its settings file.
 function createStartupUpdate({ userData, channel }) {
   const marker = path.join(userData, 'startup-update.json');
-  let pending;
+  let pending = false;
   try {
-    pending = JSON.parse(fs.readFileSync(marker, 'utf8')).completed !== true;
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
-    pending = !fs.existsSync(path.join(userData, 'lobehub-settings.json'));
     fs.mkdirSync(userData, { recursive: true });
-    fs.writeFileSync(marker, JSON.stringify({ completed: !pending }));
-  }
-  pending = pending && (channel === 'canary' || channel === 'beta');
-  let approved = false;
+    fs.writeFileSync(marker, JSON.stringify({ completed: true }));
+  } catch {}
+  let approved = true;
   let securityCheck;
   return {
-    pending,
-    run: async (check) => {
-      if (!pending) return true;
-      await app.whenReady();
-      // Offline first launch opens the app; Core's background check picks the update up later.
-      approved = !net.isOnline() || (await runUpdateWindow({ check, reason: 'first-launch' }));
-      return approved;
-    },
+    pending: false,
+    run: async () => true,
     checkSecurity: (security) => {
       if (securityCheck) return securityCheck;
       securityCheck = (async () => {

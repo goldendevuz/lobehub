@@ -128,15 +128,9 @@ const getPublishConfig = () => {
     ];
   }
 
-  // 本地开发无 S3 时回退到 GitHub
-  console.info(`📦 ${channelPath} channel: No UPDATE_SERVER_URL, falling back to GitHub provider`);
-  return [
-    {
-      owner: 'lobehub',
-      provider: 'github',
-      repo: 'lobehub',
-    },
-  ];
+  // 本地开发无 S3 时不使用外部 GitHub provider
+  console.info(`📦 ${channelPath} channel: Custom build, skipping remote publish provider`);
+  return [];
 };
 
 // https://www.electron.build/code-signing-mac#how-to-disable-code-signing-during-the-build-process-on-macos
@@ -453,6 +447,7 @@ const config = {
     installerHeader: './build/nsis-header.bmp',
     installerSidebar: './build/nsis-sidebar.bmp',
     oneClick: false,
+    perMachine: false,
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
     uninstallerSidebar: './build/nsis-sidebar.bmp',

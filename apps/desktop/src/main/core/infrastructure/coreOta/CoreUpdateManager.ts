@@ -397,18 +397,15 @@ export class CoreUpdateManager {
   checkBeforeFirstLaunch = async (
     update: (state: StartupUpdateProgress) => void,
   ): Promise<StartupUpdateOutcome> => {
-    if (!this.enabled) throw new Error(`Core OTA unavailable: ${this.disabledReasons.join(', ')}`);
-    const outcome = await this.runCheck(update);
-    if (outcome === 'needs-full-release') return 'full-update';
-    if (outcome === 'staged') return 'relaunch';
-    if (
-      outcome === 'up-to-date' ||
-      outcome === 'already-current' ||
-      outcome === 'rollout-excluded'
-    ) {
+    if (!this.enabled) return 'ready';
+    try {
+      const outcome = await this.runCheck(update);
+      if (outcome === 'needs-full-release') return 'full-update';
+      if (outcome === 'staged') return 'relaunch';
+      return 'ready';
+    } catch {
       return 'ready';
     }
-    throw new Error(this.lastError || `Startup update check did not complete: ${outcome}`);
   };
 
   private async runCheck(startupProgress?: (state: StartupUpdateProgress) => void) {

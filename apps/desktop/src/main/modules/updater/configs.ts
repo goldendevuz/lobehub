@@ -20,11 +20,11 @@ export const UPDATE_SERVER_URL = getDesktopEnv().UPDATE_SERVER_URL;
 
 export const updaterConfig = {
   app: {
-    autoCheckUpdate: true,
-    autoDownloadUpdate: true,
+    autoCheckUpdate: false,
+    autoDownloadUpdate: false,
     checkUpdateInterval: 60 * 60 * 1000, // 1 hour
   },
-  enableAppUpdate: !isDev,
+  enableAppUpdate: false,
 };
 
 export const getSparkleFeedUrl = (baseUrl: string, channel: UpdateChannel) =>

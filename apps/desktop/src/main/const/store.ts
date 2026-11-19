@@ -27,7 +27,11 @@ export const defaultProxySettings: NetworkProxySettings = {
  */
 export const STORE_DEFAULTS: ElectronMainStore = {
   appTrayVisible: true,
-  dataSyncConfig: { storageMode: 'cloud' },
+  dataSyncConfig: {
+    active: true,
+    remoteServerUrl: 'https://ikazimov7.tail1357f0.ts.net',
+    storageMode: 'selfHost',
+  },
   debugLoggingEnabled: false,
   encryptedTokens: {},
   gatewayDeviceId: '',
